@@ -67,13 +67,18 @@ namespace ObserverPatternTest
             var subscriber1 = new Mock<ISubscriber>();
             subscriber1.Setup(x => x.Update(It.IsAny<IMessage>()))
                 .Verifiable();
+            var subscriber2 = new Mock<ISubscriber>();
+            subscriber1.Setup(x => x.Update(It.IsAny<IMessage>()))
+                .Verifiable();
 
             Sut.AddSubscriber(EventEnum.EventA, Subscriber.Object);
+            Sut.AddSubscriber(EventEnum.EventA, subscriber1.Object);
             Sut.AddSubscriber(EventEnum.EventB, subscriber1.Object);
             Sut.Notify(EventEnum.EventA, Message.Object);
 
             Subscriber.Verify(x => x.Update(It.IsAny<IMessage>()), Times.Once);
-            subscriber1.Verify(x => x.Update(It.IsAny<IMessage>()), Times.Never);
+            subscriber1.Verify(x => x.Update(It.IsAny<IMessage>()), Times.Once);
+            subscriber2.Verify(x => x.Update(It.IsAny<IMessage>()), Times.Never);
         }
 
         [Fact]
