@@ -4,9 +4,16 @@ namespace ObserverPatternLibrary
 {
     public class Message : IMessage
     {
+        private readonly object Value;
+
+        public Message(object value)
+        {
+            Value = value;
+        }
+
         public object GetMessage()
         {
-            throw new System.NotImplementedException();
+            return Value;
         }
     }
 }
